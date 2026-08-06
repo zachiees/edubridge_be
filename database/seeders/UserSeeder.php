@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
     {
         //
         User::create(['email' => 'admin@email.com',
+                      'username'=> 'admin',
                       'password' => 'password',
                       'firstname' => 'Admin',
                       'middlename' => '',
@@ -23,6 +24,7 @@ class UserSeeder extends Seeder
                       'role' => 'admin']);
 
         User::create(['email' => 'student@email.com',
+                      'username'=> 'student',
                       'password' => 'password',
                       'firstname' => 'Admin',
                       'middlename' => '',
@@ -30,6 +32,7 @@ class UserSeeder extends Seeder
                       'role' => 'admin']);
 
         User::create(['email' => 'teacher@email.com',
+                      'username'=> 'teacher',
                       'password' => 'password',
                       'firstname' => 'Admin',
                       'middlename' => '',
