@@ -16,7 +16,6 @@ class UserSeeder extends Seeder
     {
         //
         User::create(['email' => 'admin@email.com',
-                      'username'=> 'admin',
                       'password' => 'password',
                       'firstname' => 'Admin',
                       'middlename' => '',
@@ -24,12 +23,11 @@ class UserSeeder extends Seeder
                       'role' => 'admin']);
 
         User::create(['email' => 'student@email.com',
-                      'username'=> 'student',
                       'password' => 'password',
                       'firstname' => 'Admin',
                       'middlename' => '',
                       'lastname' => 'Admin',
-                      'role' => 'admin']);
+                      'role' => 'student']);
 
         User::create(['email' => 'teacher@email.com',
                       'username'=> 'teacher',
@@ -37,7 +35,7 @@ class UserSeeder extends Seeder
                       'firstname' => 'Admin',
                       'middlename' => '',
                       'lastname' => 'Admin',
-                      'role' => 'admin']);
+                      'role' => 'teacher']);
 
     }
 }

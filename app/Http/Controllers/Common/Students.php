@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use App\Models\StudentDetails;
 
@@ -24,6 +26,15 @@ class Students extends Controller
             'grade_level' => ['required', 'string'],
             'modality'    => ['required', 'string', Rule::in(['face_to_face', 'hybrid', 'online'])],
         ]);
+        DB::beginTransaction();
+        $user = User::create($request->only(['firstname',
+                                             'middlename',
+                                             'lastname',
+                                             'suffix',
+                                             'mobile',
+                                             'address',
+                                             'email']));
+        DB::commit();
 
         return ['ok'];
 
