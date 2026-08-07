@@ -7,4 +7,5 @@ Route::prefix('common/courses')
     ->middleware(['auth:sanctum'])
     ->group(function (){
         Route::post('', [Courses::class, 'store'])->middleware(['role_guard:admin']);
+        Route::get('', [Courses::class, 'index']);
     });
