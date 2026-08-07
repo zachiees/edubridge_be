@@ -15,3 +15,4 @@ require_once 'api/common/users.php';
 require_once 'api/common/students.php';
 require_once 'api/common/teachers.php';
 require_once 'api/common/admins.php';
+require_once 'api/common/courses.php';
