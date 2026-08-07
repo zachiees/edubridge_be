@@ -29,7 +29,7 @@ class Auth extends Controller
                 'token' => $token];
     }
     public function logout(Request $request){
-
+        return $request->user()->currentAccessToken()->delete();
     }
     public function validate(){
         return [];
