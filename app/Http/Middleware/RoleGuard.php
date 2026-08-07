@@ -15,7 +15,7 @@ class RoleGuard
      */
     public function handle(Request $request, Closure $next,...$roles): Response
     {   $current_user = $request->user();
-        $current_role = $current_user->role->name ?? null;
+        $current_role = $current_user->role;
         if(!in_array($current_role,$roles)){
             abort(Response::HTTP_FORBIDDEN , 'RoleGuard:Invalid Role Permission');
         }

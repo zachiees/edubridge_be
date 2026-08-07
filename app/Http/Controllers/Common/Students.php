@@ -25,7 +25,7 @@ class Students extends Controller
             'modality'    => ['required', 'string', Rule::in(['face_to_face', 'hybrid', 'online'])],
         ]);
 
-        return [];
+        return ['ok'];
 
     }
 }
