@@ -14,7 +14,7 @@ class Courses extends Controller
     public function store(Request $request){
         $request->validate([
             'name'       => 'required|string|max:200',
-            'code'       => 'required|string|max:50',
+            'code'       => 'required|string|max:100',
             'teacher_id' => ['nullable','exists:users,uuid'],
             'lms_id'     => 'nullable|integer|unique:App\Models\Course,lms_id',
         ]);
