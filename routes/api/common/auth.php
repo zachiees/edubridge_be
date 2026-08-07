@@ -6,5 +6,5 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('common/auth')->group(function () {
     Route::post('login',    [Auth::class, 'login']);
     Route::post('logout',   [Auth::class, 'login']);
-    Route::post('validate', [Auth::class, 'validate'])->middleware(['auth:sanctum']);
+    Route::get('validate', [Auth::class, 'validate'])->middleware(['auth:sanctum']);
 });
