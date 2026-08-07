@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('lrn')->unique();
             $table->string('grade_level')->nullable();
             $table->string('modality')->nullable();
-            $table->string('payee')->nullable();
+            $table->string('payee_type')->nullable();
             $table->timestamps();
         });
     }

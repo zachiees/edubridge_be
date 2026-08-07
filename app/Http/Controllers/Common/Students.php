@@ -27,16 +27,21 @@ class Students extends Controller
             'modality'    => ['required', 'string', Rule::in(['face_to_face', 'hybrid', 'online'])],
         ]);
         DB::beginTransaction();
-        $user = User::create($request->only(['firstname',
-                                             'middlename',
-                                             'lastname',
-                                             'suffix',
-                                             'mobile',
-                                             'address',
-                                             'email']));
+        $password = uniqid('', true);
+        $user = User::create([...$request->only(['firstname',
+                                                 'middlename',
+                                                 'lastname',
+                                                 'suffix',
+                                                 'mobile',
+                                                 'address',
+                                                 'email']),
+                                'role'=>'student',
+                                'password' => $password]);
+        StudentDetails::create([...$request->only(['lrn','payee_type','grade_level','modality']),
+                                'user_id' => $user->id,]);
         DB::commit();
-
-        return ['ok'];
+        $user->load('student_details');
+        return $user;
 
     }
 }

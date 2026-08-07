@@ -30,7 +30,6 @@ class UserSeeder extends Seeder
                       'role' => 'student']);
 
         User::create(['email' => 'teacher@email.com',
-                      'username'=> 'teacher',
                       'password' => 'password',
                       'firstname' => 'Admin',
                       'middlename' => '',

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use http\Env\Response;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -60,5 +61,8 @@ class User extends Authenticatable
     public function uniqueIds(){
         return ['uuid'];
     }
-
+    //RELATIONS
+    public function student_details(){
+        return $this->hasOne(StudentDetails::class,'user_id','id');
+    }
 }
