@@ -23,6 +23,9 @@ return new class extends Migration
             $table->string('role');
             $table->unsignedBigInteger('lms_id')->nullable();
             $table->boolean('has_lms')->default(false);
+            $table->string('mobile')->nullable();
+            $table->string('suffix')->nullable();
+            $table->string('address')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
