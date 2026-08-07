@@ -61,4 +61,7 @@ class Courses extends Controller
 
         return ['items'=>$items,'count'=>$count];
     }
+    public function destroy(string $uuid){
+        return Course::where('uuid', $uuid)->firstOrFail()->delete();
+    }
 }

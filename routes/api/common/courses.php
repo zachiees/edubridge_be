@@ -8,4 +8,5 @@ Route::prefix('common/courses')
     ->group(function (){
         Route::post('', [Courses::class, 'store'])->middleware(['role_guard:admin']);
         Route::get('', [Courses::class, 'index']);
+        Route::delete('{uuid}', [Courses::class, 'destroy'])->middleware(['role_guard:admin']);
     });
