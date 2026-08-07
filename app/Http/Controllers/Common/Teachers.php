@@ -49,4 +49,10 @@ class Teachers extends Controller
 
         return ['items'=>$items,'count'=>$count];
     }
+    public function list(){
+        return User::select(['uuid', 'firstname', 'middlename', 'lastname', 'email'])
+                    ->where('role', 'teacher')
+                    ->orderBy('firstname', 'asc')
+                    ->get();
+    }
 }

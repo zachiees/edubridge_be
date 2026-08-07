@@ -7,5 +7,6 @@ Route::prefix('common/teachers')
         ->group(function () {
             Route::post('', [Teachers::class, 'store'])->middleware(['role_guard:admin']);
             Route::get('',  [Teachers::class, 'index']);
+            Route::get('list', [Teachers::class, 'list']);
 
         });

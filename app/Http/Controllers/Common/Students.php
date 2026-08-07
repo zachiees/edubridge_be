@@ -50,6 +50,7 @@ class Students extends Controller
         $search = $request->input('query', '');
         $sort = $request->input('sort', '');
         $grade_level = $request->input('grade_level', '');
+        $payee_type = $request->input('payee_type', '');
         $page_size = 20;
 
         if($search){
@@ -67,6 +68,10 @@ class Students extends Controller
         //FILTERS
         if($grade_level){
             $query->whereRelation('student_details','grade_level', $grade_level);
+        }
+
+        if($payee_type){
+            $query->whereRelation('student_details','payee_type', $payee_type);
         }
 
         //SORT
