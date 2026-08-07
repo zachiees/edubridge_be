@@ -8,5 +8,6 @@ Route::prefix('common/teachers')
             Route::post('', [Teachers::class, 'store'])->middleware(['role_guard:admin']);
             Route::get('',  [Teachers::class, 'index']);
             Route::get('list', [Teachers::class, 'list']);
+            Route::delete('{uuid}', [Teachers::class, 'destroy'])->middleware(['role_guard:admin']);
 
         });

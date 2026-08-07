@@ -90,4 +90,7 @@ class Students extends Controller
 
         return ['items'=>$items,'count'=>$count];
     }
+    public function destroy(string $uuid){
+        return User::where('role', 'student')->where('uuid', $uuid)->firstOrFail()->delete();
+    }
 }

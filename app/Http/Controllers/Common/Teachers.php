@@ -55,4 +55,7 @@ class Teachers extends Controller
                     ->orderBy('firstname', 'asc')
                     ->get();
     }
+    public function destroy(string $uuid){
+        return User::where('role', 'teacher')->where('uuid', $uuid)->firstOrFail()->delete();
+    }
 }
