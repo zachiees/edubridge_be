@@ -11,10 +11,11 @@ class Lms extends Controller
     //
     public function __construct(private MoodleApi $moodle){
     }
-    public function courses(){
-        return $this->moodle->courses();
+    public function courses(Request $request){
+        $course_id = $request->input('category_id',null);
+        return $this->moodle->courses($course_id);
     }
-    public function courses_categories(){
+    public function course_categories(){
         return $this->moodle->courseCategories();
     }
     public function roles(){
