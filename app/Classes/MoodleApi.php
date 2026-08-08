@@ -103,6 +103,18 @@ class MoodleApi
         $user = ['userid'=>$userid,'courseid'=>$courseid];
         return $this->sendPost('core_user_get_course_user_profiles',['userlist'=>[$user]]);
     }
+    public function getUserByRole($role_id,$context){
+        /*
+         * THIS FUNCTION REQUIRES LOCAL PLUGIN TO BE INSTALLED
+         *
+         * context = system | coursecat | course |  module | user
+         * instanceid (optional) = (0 for system) search web for complete list
+         *
+         * */
+        $params  = ["roleid"=>$role_id, "contextlevel"=> $context];
+        return $this->sendPost('local_wsgetusersbyrole_get_users_by_role', $params);
+
+    }
     //
     public function sendPost($wsfunction,$params=[]){
         $headers = ['wstoken'=>$this->api_token,
