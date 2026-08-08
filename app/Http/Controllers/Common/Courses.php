@@ -64,4 +64,9 @@ class Courses extends Controller
     public function destroy(string $uuid){
         return Course::where('uuid', $uuid)->firstOrFail()->delete();
     }
+    public function list(){
+        return Course::select(['uuid', 'name', 'code'])
+                      ->orderBy('name', 'asc')
+                      ->get();
+    }
 }
