@@ -7,6 +7,7 @@ Route::prefix('common/courses')
     ->middleware(['auth:sanctum'])
     ->group(function (){
         Route::post('', [Courses::class, 'store'])->middleware(['role_guard:admin']);
+        Route::post('import', [Courses::class, 'import'])->middleware(['role_guard:admin']);
         Route::get('', [Courses::class, 'index']);
         Route::get('list', [Courses::class, 'list']);
         Route::delete('{uuid}', [Courses::class, 'destroy'])->middleware(['role_guard:admin']);

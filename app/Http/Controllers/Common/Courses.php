@@ -69,4 +69,24 @@ class Courses extends Controller
                       ->orderBy('name', 'asc')
                       ->get();
     }
+    public function import(Request $request){
+        $request->validate([
+            'items'              => 'required|array',
+            'items.*.id'         => 'required',
+            'items.*.shortname'  => 'required|string',
+            'items.*.fullname'   => 'required|string',
+        ]);
+
+        $items = $request->input('items');
+
+        foreach ($items as $course) {
+            Course::updateOrCreate(
+                ['lms_id' => $course['id']],
+                ['name'   => $course['fullname'],
+                 'code'   => $course['shortname']]
+            );
+        }
+
+        return [];
+    }
 }
