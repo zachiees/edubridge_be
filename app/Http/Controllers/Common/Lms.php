@@ -14,4 +14,7 @@ class Lms extends Controller
     public function courses(){
         return $this->moodle->courses();
     }
+    public function roles(){
+        return $this->moodle->getRoles();
+    }
 }

@@ -5,4 +5,5 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('common/lms')->middleware(['auth:sanctum'])
     ->group(function () {
         Route::get('courses', [Lms::class, 'courses']);
+        Route::get('roles',   [Lms::class, 'roles']);
 });
