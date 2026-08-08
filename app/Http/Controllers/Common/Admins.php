@@ -41,4 +41,7 @@ class Admins extends Controller
 
         return ['items'=>$items,'count'=>$count];
     }
+    public function destroy(string $uuid){
+        return User::where('role', 'admin')->where('uuid', $uuid)->firstOrFail()->delete();
+    }
 }
