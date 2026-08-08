@@ -17,4 +17,13 @@ class Lms extends Controller
     public function roles(){
         return $this->moodle->getRoles();
     }
+    public function users_by_role(Request $request){
+        $request->validate(['role_id'=>'required',
+                            'context'=>'required']);
+
+        $role_id = $request->input('role_id');
+        $context = $request->input('context');
+
+        return $this->moodle->getUserByRole($role_id, $context);
+    }
 }
