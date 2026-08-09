@@ -98,18 +98,19 @@ class Courses extends Controller
         $record = Course::where('uuid',$uuid)->firstOrFail();
 
         foreach($items as $student){
-            $student = User::where('uuid',$student['uuid'])->first();
+            $student = User::where('uuid',$student['uuid'])->firstOrFail();
 
-            if($student) continue;
+            if(!$student) continue;
 
             $exists = CourseStudent::where('user_id', $student['uuid'])
                                     ->where('course_id', $record->id)
                                     ->exists();
 
-            if($exists) return;
+            if($exists) continue;
 
             CourseStudent::create([ 'user_id' => $student->id, 'course_id' => $record->id ]);
         }
+        return [];
     }
     public function import(Request $request){
         $request->validate([
