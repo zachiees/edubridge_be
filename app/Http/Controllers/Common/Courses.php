@@ -61,6 +61,26 @@ class Courses extends Controller
 
         return ['items'=>$items,'count'=>$count];
     }
+    public function find(Request $request, $uuid){
+        return Course::where('uuid',$uuid)->firstOrFail();
+    }
+    public function update(Request $request, string $uuid){
+        $course = Course::where('uuid', $uuid)->firstOrFail();
+
+        $request->validate([
+            'name'       => 'required|string|max:200',
+            'code'       => 'required|string|max:100',
+            'teacher_id' => 'nullable|exists:users,uuid',
+            'lms_id'     => ['nullable','integer',Rule::unique('courses','lms_id')->ignore($course->id,'id')],
+        ]);
+
+        $teacher = $request->filled('teacher_id') ? User::where('uuid',$request->input('teacher_id'))->first() : null;
+
+        $course->update([...$request->only(['name', 'code', 'lms_id']),
+                         'teacher_id'=>$teacher?->id,]);
+
+        return $course;
+    }
     public function destroy(string $uuid){
         return Course::where('uuid', $uuid)->firstOrFail()->delete();
     }
