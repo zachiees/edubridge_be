@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
 class Course extends Model
 {
@@ -29,9 +29,12 @@ class Course extends Model
     public function uniqueIds(){
         return ['uuid'];
     }
-
+    //RELATIONS
     public function teacher(){
         return $this->belongsTo(User::class, 'teacher_id','id');
+    }
+    public function students(){
+        return $this->belongsToMany(User::class, 'course_students', 'course_id', 'user_id');
     }
 
 }

@@ -63,7 +63,7 @@ class Courses extends Controller
         return ['items'=>$items,'count'=>$count];
     }
     public function find(Request $request, $uuid){
-        return Course::where('uuid',$uuid)->firstOrFail();
+        return Course::with(['students','teacher'])->where('uuid',$uuid)->firstOrFail();
     }
     public function update(Request $request, string $uuid){
         $course = Course::where('uuid', $uuid)->firstOrFail();
@@ -102,7 +102,7 @@ class Courses extends Controller
 
             if(!$student) continue;
 
-            $exists = CourseStudent::where('user_id', $student['uuid'])
+            $exists = CourseStudent::where('user_id', $student->id)
                                     ->where('course_id', $record->id)
                                     ->exists();
 
