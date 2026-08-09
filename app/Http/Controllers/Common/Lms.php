@@ -15,6 +15,9 @@ class Lms extends Controller
         $course_id = $request->input('category_id',null);
         return $this->moodle->courses($course_id);
     }
+    public function course_find(Request $request,$id){
+        return $this->moodle->findCourseById($id);
+    }
     public function course_categories(){
         return $this->moodle->courseCategories();
     }
