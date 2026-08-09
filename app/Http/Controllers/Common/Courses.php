@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\CourseStudent;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\User;
@@ -88,6 +89,27 @@ class Courses extends Controller
         return Course::select(['uuid', 'name', 'code'])
                       ->orderBy('name', 'asc')
                       ->get();
+    }
+    public function add_students(Request $request,$uuid){
+        $request->validate(['students'        => 'required|array',
+                            'students.*.uuid' => 'required']);
+        $items = $request->input('students',[]);
+
+        $record = Course::where('uuid',$uuid)->firstOrFail();
+
+        foreach($items as $student){
+            $student = User::where('uuid',$student['uuid'])->first();
+
+            if($student) continue;
+
+            $exists = CourseStudent::where('user_id', $student['uuid'])
+                                    ->where('course_id', $record->id)
+                                    ->exists();
+
+            if($exists) return;
+
+            CourseStudent::create([ 'user_id' => $student->id, 'course_id' => $record->id ]);
+        }
     }
     public function import(Request $request){
         $request->validate([
