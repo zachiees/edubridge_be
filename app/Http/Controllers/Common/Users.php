@@ -50,7 +50,16 @@ class Users extends Controller
         return [];
     }
     public function importTeachers($items){
-
+        foreach ($items as $teacher) {
+            User::updateOrCreate(
+                ['email'     => $teacher['email']],
+                ['firstname' => $teacher['firstname'],
+                 'lastname'  => $teacher['lastname'],
+                 'password'  => 'Teacher@2026',
+                 'lms_id'    => $teacher['id'],
+                 'role'      => 'teacher',
+                ]);
+        }
         return [];
     }
 }

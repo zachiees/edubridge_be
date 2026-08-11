@@ -116,6 +116,16 @@ class Courses extends Controller
         }
         return [];
     }
+    public function remove_student(Request $request, $uuid, $student_uuid){
+        $record = Course::where('uuid', $uuid)->firstOrFail();
+        $student = User::where('uuid', $student_uuid)->firstOrFail();
+
+        CourseStudent::where('user_id', $student->id)
+                      ->where('course_id', $record->id)
+                      ->delete();
+
+        return [];
+    }
     public function import(Request $request){
         $request->validate([
             'course_id'          => 'required',

@@ -13,5 +13,6 @@ Route::prefix('common/courses')
         Route::get('{uuid}',           [Courses::class, 'find'])->middleware(['role_guard:admin']);
         Route::patch('{uuid}',         [Courses::class, 'update'])->middleware(['role_guard:admin']);
         Route::delete('{uuid}',        [Courses::class, 'destroy'])->middleware(['role_guard:admin']);
-        Route::post('{uuid}/students', [Courses::class, 'add_students'])->middleware(['role_guard:admin']);
+        Route::post('{uuid}/students',                    [Courses::class, 'add_students'])->middleware(['role_guard:admin']);
+        Route::delete('{uuid}/students/{student_uuid}',   [Courses::class, 'remove_student'])->middleware(['role_guard:admin']);
     });
