@@ -143,12 +143,14 @@ class Courses extends Controller
                 if($import_student){
                     $this->importStudent($u,$student_role_id,$local_course);
                 }
+                if($import_teachers){
+                    $this->importTeacher($u,$teacher_role_id,$local_course);
+                }
             }
         }
         DB::commit();
         return [];
     }
-    //
     private function importStudent($user,$student_role_id,$local_course){
         $user_roles = $user['roles'];
         //FIND IF USER HAS CORRECT ROLE
@@ -171,4 +173,20 @@ class Courses extends Controller
                                'course_id' => $local_course->id ]);
 
     }
+    private function importTeacher($user,$teacher_role_id,$local_course){
+        $user_roles = $user['roles'];
+        //FIND IF USER HAS CORRECT ROLE
+        $role = array_find($user_roles, function($role) use ($teacher_role_id){ return $role['roleid'] == $teacher_role_id; });
+        if(!$role){
+            return;
+        }
+        //FIND LOCAL USER
+        $local_user = User::where('lms_id',$user['id'])->first();
+        if(!$local_user){
+            return;
+        }
+        $local_course->update(['teacher_id' => $local_user->id]);
+    }
+    //
+
 }
