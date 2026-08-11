@@ -56,7 +56,7 @@ class MoodleApi
         return $items? $this->sendPost('enrol_manual_unenrol_users', $params):[];
     }
     public function courseUsers($id){
-        $this->sendPost('core_enrol_get_enrolled_users ', ['courseid'=>$id]);
+        return $this->sendPost('core_enrol_get_enrolled_users', ['courseid'=>$id]);
     }
     public function assignRole($user_id, $role_id,$context_id = null){
         $item = [];

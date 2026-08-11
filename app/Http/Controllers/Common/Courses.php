@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Common;
 
+use App\Classes\MoodleApi;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseStudent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 
 class Courses extends Controller
 {
     //
+    public function __construct(private MoodleApi $moodle){
+    }
     public function store(Request $request){
         $request->validate([
             'name'       => 'required|string|max:200',
@@ -114,22 +118,57 @@ class Courses extends Controller
     }
     public function import(Request $request){
         $request->validate([
-            'items'              => 'required|array',
-            'items.*.id'         => 'required',
-            'items.*.shortname'  => 'required|string',
-            'items.*.fullname'   => 'required|string',
+            'course_id'          => 'required',
+            'student_role_id'    => 'nullable',
+            'teacher_role_id'    => 'nullable',
         ]);
 
-        $items = $request->input('items');
+        $course_id       = $request->input('course_id');
+        $student_role_id = $request->input('student_role_id',null);
+        $teacher_role_id = $request->input('teacher_role_id',null);
+        $import_student  = $student_role_id!= null;
+        $import_teachers = $teacher_role_id!= null;
 
-        foreach ($items as $course) {
-            Course::updateOrCreate(
-                ['lms_id' => $course['id']],
-                ['name'   => $course['fullname'],
-                 'code'   => $course['shortname']]
-            );
+
+        $lms_course = $this->moodle->findCourseById($course_id);
+        $users      = $this->moodle->courseUsers($course_id);
+        DB::beginTransaction();
+        $local_course =    Course::updateOrCreate(['lms_id' => $course_id],
+                                                  ['name'   => $lms_course['fullname'],
+                                                   'code'   => $lms_course['shortname']]);
+
+        if($import_student || $import_teachers){
+            $users = $this->moodle->courseUsers($course_id);
+            foreach($users as $u){
+                if($import_student){
+                    $this->importStudent($u,$student_role_id,$local_course);
+                }
+            }
         }
-
+        DB::commit();
         return [];
+    }
+    //
+    private function importStudent($user,$student_role_id,$local_course){
+        $user_roles = $user['roles'];
+        //FIND IF USER HAS CORRECT ROLE
+        $role = array_find($user_roles, function($role) use ($student_role_id){ return $role['roleid'] == $student_role_id; });
+        if(!$role){
+            return;
+        }
+        //FIND LOCAL USER
+        $local_user = User::where('lms_id',$user['id'])->first();
+        if(!$local_user){
+            return;
+        }
+        $exists = CourseStudent::where('user_id', $local_user->id)
+                                ->where('course_id', $local_course->id)
+                                ->exists();
+        if($exists){
+            return;
+        }
+        CourseStudent::create(['user_id' => $local_user->id,
+                               'course_id' => $local_course->id ]);
+
     }
 }

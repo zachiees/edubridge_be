@@ -51,7 +51,7 @@ class Students extends Controller
         $sort = $request->input('sort', '');
         $grade_level = $request->input('grade_level', '');
         $payee_type = $request->input('payee_type', '');
-        $page_size = 20;
+        $page_size = $request->input('page_size', 20);
 
         if($search){
             $query->where(function($query) use ($search){
