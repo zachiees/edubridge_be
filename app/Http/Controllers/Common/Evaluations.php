@@ -40,9 +40,8 @@ class Evaluations extends Controller
                                                'type'         =>'rating',
                                                'question'     =>$q ]);
         }
-
-
-
+        DB::commit();
+        return $eval;
 
     }
 }
