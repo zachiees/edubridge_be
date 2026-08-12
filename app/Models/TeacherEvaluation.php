@@ -18,4 +18,8 @@ class TeacherEvaluation extends Model
         return ['uuid'];
     }
 
+    public function questions(){
+        return $this->hasMany(TeacherEvaluationQuestion::class, 'evaluation_id', 'id');
+    }
+
 }

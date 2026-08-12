@@ -44,4 +44,30 @@ class Evaluations extends Controller
         return $eval;
 
     }
+    public function index(Request $request){
+        $query = TeacherEvaluation::with('questions');
+        $page = $request->input('page', 1);
+        $scope = $request->input('scope', '');
+        $sort = $request->input('sort', '');
+        $page_size = 20;
+
+        //FILTERS
+        if($scope){
+            $query->where('scope', $scope);
+        }
+
+        //SORT
+        match ($sort){
+            'date_desc'=> $query->orderBy('created_at', 'desc'),
+            'date_asc' => $query->orderBy('created_at', 'asc'),
+            default => $query->orderBy('created_at', 'desc'),
+        };
+
+        $count = $query->count();
+        //PAGINATE
+        $query->offset(($page - 1) * $page_size)->limit($page_size);
+        $items = $query->get();
+
+        return ['items'=>$items,'count'=>$count];
+    }
 }

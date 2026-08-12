@@ -7,5 +7,6 @@ Route::prefix('common/evaluations')
     ->group(function () {
 
     Route::post('',[Evaluations::class, 'store'])->middleware(['role_guard:admin']);
+    Route::get('', [Evaluations::class, 'index']);
 
     });
