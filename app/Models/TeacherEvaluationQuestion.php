@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUniqueIds;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class TeacherEvaluationQuestion extends Model
-{
+{   use HasUuids;
     //
     protected $hidden = ['id'];
     protected $fillable = [
@@ -14,5 +16,8 @@ class TeacherEvaluationQuestion extends Model
         'question',
     ];
 
+    public function uniqueIds(){
+        return ['uuid'];
+    }
 
 }

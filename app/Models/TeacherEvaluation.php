@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUniqueIds;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class TeacherEvaluation extends Model
-{   use HasUniqueIds;
+{   use HasUuids;
     //
     protected $hidden = ['id'];
     protected $fillable = [

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('teacher_evaluations', function (Blueprint $table) {
+        Schema::create('teacher_evaluation_questions', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique();
             $table->foreignId('evaluation_id')
