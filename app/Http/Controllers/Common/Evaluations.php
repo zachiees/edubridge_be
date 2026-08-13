@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\TeacherEvaluation;
 use App\Models\TeacherEvaluationQuestion;
+use App\Models\TeacherEvaluationRespondents;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Evaluations extends Controller
 {
@@ -40,10 +43,42 @@ class Evaluations extends Controller
                                                'type'         =>'rating',
                                                'question'     =>$q ]);
         }
-        DB::commit();
+
+        //POPULATE RESPONDENTS
+        switch ($scope){
+            case 'all':
+                $this->eval_all_respondents($eval);
+                break;
+        }
+
+        return abort(404);
+
         return $eval;
 
     }
+    private function eval_all_respondents(TeacherEvaluation $eval){
+        //GET ALL COURSES
+        $courses = Course::whereNotNull('teacher_id')->get();
+
+        foreach ($courses as $c){
+            //GET COURSE TEACHER
+            $teacher = $c->teacher;
+            $students = $c->students;
+            //SKIP IF NULL
+            if(!$teacher){
+                return;
+            }
+            foreach ($students as $s){
+                $res = TeacherEvaluationRespondents::create([
+                    'evaluation_id' => $eval->id,
+                    'course_id'     => $c->id,
+                    'teacher_id'    => $teacher->id,
+                    'student_id'    => $s->id,
+                ]);
+            }
+        }
+    }
+
     public function index(Request $request){
         $query = TeacherEvaluation::with('questions');
         $page = $request->input('page', 1);
