@@ -47,8 +47,10 @@ class Evaluations extends Controller
         //POPULATE RESPONDENTS
         switch ($scope){
             case 'all':
-                $this->eval_all_respondents($eval);
+                $this->eval_all($eval);
                 break;
+            case 'course':
+                $this->eval_course($eval,$scope_items);
         }
 
         return abort(404);
@@ -56,7 +58,7 @@ class Evaluations extends Controller
         return $eval;
 
     }
-    private function eval_all_respondents(TeacherEvaluation $eval){
+    private function eval_all(TeacherEvaluation $eval){
         //GET ALL COURSES
         $courses = Course::whereNotNull('teacher_id')->get();
 
@@ -66,13 +68,43 @@ class Evaluations extends Controller
             $students = $c->students;
             //SKIP IF NULL
             if(!$teacher){
-                return;
+                continue;
             }
+            //CREATE RESPONDENTS
             foreach ($students as $s){
-                $res = TeacherEvaluationRespondents::create([
+                TeacherEvaluationRespondents::create([
                     'evaluation_id' => $eval->id,
                     'course_id'     => $c->id,
                     'teacher_id'    => $teacher->id,
+                    'student_id'    => $s->id,
+                ]);
+            }
+        }
+    }
+    private function eval_grade_level_respondents(TeacherEvaluation $eval,$grade_levels){
+
+    }
+    private function eval_course(TeacherEvaluation $eval,$course_list){
+        Log::info('here');
+        Log::info($course_list);
+        foreach ($course_list as $uuid){
+            //FIND COURSE
+            $course = Course::where('uuid',$uuid)->first();
+            if(!$course){
+                continue;
+            }
+            //SKIP IF NO TEACHER
+            if(!$course->teacher){
+                continue;
+            }
+            //GET STUDENTS
+            $students = $course->students;
+            //CREATE RESPONDENTS
+            foreach ($students as $s){
+                TeacherEvaluationRespondents::create([
+                    'evaluation_id' => $eval->id,
+                    'course_id'     => $course->id,
+                    'teacher_id'    => $course->teacher->id,
                     'student_id'    => $s->id,
                 ]);
             }
