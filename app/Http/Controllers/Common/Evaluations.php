@@ -7,9 +7,11 @@ use App\Models\Course;
 use App\Models\TeacherEvaluation;
 use App\Models\TeacherEvaluationQuestion;
 use App\Models\TeacherEvaluationRespondents;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class Evaluations extends Controller
 {
@@ -51,10 +53,13 @@ class Evaluations extends Controller
                 break;
             case 'course':
                 $this->eval_course($eval,$scope_items);
+                break;
+            case 'teacher':
+                $this->eval_teacher($eval,$scope_items);
+                break;
+            default: abort(Response::HTTP_BAD_REQUEST);
         }
-
-        return abort(404);
-
+        DB::commit();
         return $eval;
 
     }
@@ -107,6 +112,30 @@ class Evaluations extends Controller
                     'teacher_id'    => $course->teacher->id,
                     'student_id'    => $s->id,
                 ]);
+            }
+        }
+    }
+    private function eval_teacher(TeacherEvaluation $eval,$teacher_list){
+        foreach ($teacher_list as $uuid){
+            //FIND TEACHER
+            $teacher = User::where('uuid',$uuid)->first();
+            //SKIP IF NULL
+            if(!$teacher){
+                continue;
+            }
+            //FIND TEACHER COURSES
+            $courses = Course::where('teacher_id',$teacher->id)->get();
+            foreach ($courses as $c){
+                //GET STUDENTS
+                $students = $c->students;
+                foreach ($students as $s){
+                    TeacherEvaluationRespondents::create([
+                        'evaluation_id' => $eval->id,
+                        'course_id'     => $c->id,
+                        'teacher_id'    => $teacher->id,
+                        'student_id'    => $s->id,
+                    ]);
+                }
             }
         }
     }
