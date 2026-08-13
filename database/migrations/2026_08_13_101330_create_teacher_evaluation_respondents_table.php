@@ -29,7 +29,7 @@ return new class extends Migration
                   ->constrained('courses')
                   ->cascadeOnDelete()
                   ->cascadeOnUpdate();
-            $table->boolean('completed')->default(false);
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

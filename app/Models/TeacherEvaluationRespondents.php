@@ -19,7 +19,8 @@ class TeacherEvaluationRespondents extends Model
         'evaluation_id',
         'student_id',
         'teacher_id',
-        'course_id'
+        'course_id',
+        'status',
     ];
 
     protected $with = ['student','teacher','course'];
