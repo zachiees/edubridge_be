@@ -18,3 +18,7 @@ require_once 'api/common/admins.php';
 require_once 'api/common/courses.php';
 require_once 'api/common/lms.php';
 require_once 'api/common/evaluations.php';
+
+//ADMIN
+
+require_once 'api/admin/dashboard.php';
