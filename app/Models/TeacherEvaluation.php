@@ -21,5 +21,8 @@ class TeacherEvaluation extends Model
     public function questions(){
         return $this->hasMany(TeacherEvaluationQuestion::class, 'evaluation_id', 'id');
     }
+    public function respondents(){
+        return $this->hasMany(TeacherEvaluationRespondents::class, 'evaluation_id', 'id');
+    }
 
 }

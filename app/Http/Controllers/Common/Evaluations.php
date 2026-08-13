@@ -139,9 +139,9 @@ class Evaluations extends Controller
             }
         }
     }
-
+    //
     public function index(Request $request){
-        $query = TeacherEvaluation::with('questions');
+        $query = TeacherEvaluation::withCount(['respondents','questions']);
         $page = $request->input('page', 1);
         $scope = $request->input('scope', '');
         $sort = $request->input('sort', '');
