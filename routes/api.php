@@ -22,3 +22,7 @@ require_once 'api/common/evaluations.php';
 //ADMIN
 
 require_once 'api/admin/dashboard.php';
+
+//STUDENT
+
+require_once 'api/student/courses.php';
