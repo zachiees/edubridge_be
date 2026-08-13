@@ -26,4 +26,4 @@ require_once 'api/admin/dashboard.php';
 //STUDENT
 
 require_once 'api/student/courses.php';
-require_once 'api/student/evaluation.php';
+require_once 'api/student/evaluations.php';
