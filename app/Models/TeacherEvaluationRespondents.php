@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Http\Controllers\Common\Students;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class TeacherEvaluationRespondents extends Model
 {
+    use HasUuids;
+
     //
     protected $hidden = [
         'id',
@@ -24,6 +27,10 @@ class TeacherEvaluationRespondents extends Model
     ];
 
     protected $with = ['student','teacher','course'];
+
+    public function uniqueIds(){
+        return ['uuid'];
+    }
 
     //RELATIONS
     public function student(){

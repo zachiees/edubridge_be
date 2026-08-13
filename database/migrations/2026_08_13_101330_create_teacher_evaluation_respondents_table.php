@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('teacher_evaluation_respondents', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
             $table->foreignId('evaluation_id')
                   ->constrained('teacher_evaluations')
                   ->cascadeOnDelete()
