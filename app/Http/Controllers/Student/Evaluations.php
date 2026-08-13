@@ -30,4 +30,10 @@ class Evaluations extends Controller
 
         return ['items'=>$items,'count'=>$count];
     }
+    public function find(Request $request, $uuid){
+        $user = $request->user();
+        return TeacherEvaluationRespondents::where('uuid',$uuid)
+                                            ->where('student_id',$user->id)
+                                            ->firstOrFail();
+    }
 }

@@ -6,4 +6,5 @@ Route::prefix('student/evaluations')
     ->middleware(['auth:sanctum','role_guard:student'])
     ->group(function () {
         Route::get('', [Evaluations::class, 'index']);
+        Route::get('{uuid}', [Evaluations::class, 'find']);
     });
