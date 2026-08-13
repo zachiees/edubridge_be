@@ -15,7 +15,13 @@ class Evaluations extends Controller
         $query = TeacherEvaluationRespondents::where('student_id',$user->id);
 
         $page = $request->input('page', 1);
+        $status = $request->input('status', '');
         $page_size = 20;
+
+        //FILTERS
+        if($status){
+            $query->where('status', $status);
+        }
 
         $count = $query->count();
         //PAGINATE
