@@ -174,4 +174,9 @@ class Evaluations extends Controller
     public function destroy(string $uuid){
         return TeacherEvaluation::where('uuid', $uuid)->firstOrFail()->delete();
     }
+    public function set_visibility(Request $request, string $uuid){
+        $request->validate(['visibility' => 'required|boolean']);
+        $eval = TeacherEvaluation::where('uuid', $uuid)->firstOrFail();
+        return $eval->update(['visible' => $request->input('visibility')]);
+    }
 }
