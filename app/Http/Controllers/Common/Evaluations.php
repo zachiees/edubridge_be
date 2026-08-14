@@ -18,6 +18,7 @@ class Evaluations extends Controller
     //
     public function store(Request $request){
         $request->validate([
+            'title' => 'required',
             'scope' =>'required|in:all,grade_level,course,teacher',
             'scope_items' =>'array',
             'questions'         =>'array',
@@ -26,6 +27,7 @@ class Evaluations extends Controller
         ]);
         //PREPARATIONS
 
+        $title           = $request->input('title');
         $scope           = $request->input('scope');
         $scope_items     = $request->input('scope_items',[]);
         $questions       = $request->input('questions',[]);
@@ -36,6 +38,7 @@ class Evaluations extends Controller
         DB::beginTransaction();
         //STORE META DATA
         $eval = TeacherEvaluation::create([
+            'title' =>$title,
             'scope' =>$scope,
             'format'=>$format,
         ]);

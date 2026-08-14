@@ -10,8 +10,10 @@ class TeacherEvaluation extends Model
     //
     protected $hidden = ['id'];
     protected $fillable = [
+        'title',
         'scope',
         'format',
+        'visible',
     ];
     protected $casts = ['format' => 'array'];
     public function uniqueIds(){

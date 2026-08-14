@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('teacher_evaluations', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique();
+            $table->string('title');
             $table->string('scope');
             $table->json('format');
+            $table->boolean('visible')->default(false);
             $table->timestamps();
         });
     }
