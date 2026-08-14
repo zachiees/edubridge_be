@@ -49,7 +49,7 @@ class Evaluations extends Controller
                                                 ->where('student_id',$user->id)
                                                 ->firstOrFail();
 
-        if($respondent->status == 'completed'){
+        if($respondent->status == 'done'){
             return response(['message'=>'item already completed'],Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -70,7 +70,7 @@ class Evaluations extends Controller
                'response'     => $question->type == 'feedback'? $value : null
            ]);
         }
-        $respondent->update(['status' => 'completed']);
+        $respondent->update(['status' => 'done']);
         DB::commit();
         return [];
     }
