@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class TeacherEvaluationResponse extends Model
-{
+{   use HasUuids;
     //
     protected $hidden = [
         'id',
@@ -22,6 +23,9 @@ class TeacherEvaluationResponse extends Model
         'response'
     ];
 
+    public function uniqueIds(){
+        return ['uuid'];
+    }
 
 
 }
