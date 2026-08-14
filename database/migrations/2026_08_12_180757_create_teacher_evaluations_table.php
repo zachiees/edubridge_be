@@ -16,7 +16,8 @@ return new class extends Migration
             $table->uuid()->unique();
             $table->string('title');
             $table->string('scope');
-            $table->json('format');
+            $table->text('reminders')->nullable();
+            $table->text('instructions')->nullable();
             $table->boolean('visible')->default(false);
             $table->timestamps();
         });

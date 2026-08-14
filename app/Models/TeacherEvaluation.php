@@ -12,10 +12,11 @@ class TeacherEvaluation extends Model
     protected $fillable = [
         'title',
         'scope',
-        'format',
         'visible',
+        'reminders',
+        'instructions',
     ];
-    protected $casts = ['format' => 'array'];
+
     public function uniqueIds(){
         return ['uuid'];
     }

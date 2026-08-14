@@ -18,29 +18,27 @@ class Evaluations extends Controller
     //
     public function store(Request $request){
         $request->validate([
-            'title' => 'required',
+            'visible'     => 'required|boolean',
+            'title'       => 'required',
+            'reminders'   => 'nullable',
+            'instructions'=> 'nullable',
             'scope' =>'required|in:all,grade_level,course,teacher',
             'scope_items' =>'array',
             'questions'         =>'array',
             'feedback_questions'=>'array',
-            'format'            =>'nullable',
         ]);
         //PREPARATIONS
 
-        $title           = $request->input('title');
         $scope           = $request->input('scope');
         $scope_items     = $request->input('scope_items',[]);
         $questions       = $request->input('questions',[]);
         $feedback_questions = $request->input('feedback_questions',[]);
-        $format = $request->input('format',[]);
 
 
         DB::beginTransaction();
         //STORE META DATA
         $eval = TeacherEvaluation::create([
-            'title' =>$title,
-            'scope' =>$scope,
-            'format'=>$format,
+            ...$request->except(['scope_items','questions','feedback_questions']),
         ]);
 
         foreach ($questions as $q){
