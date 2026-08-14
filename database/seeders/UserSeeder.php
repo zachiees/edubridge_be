@@ -24,16 +24,16 @@ class UserSeeder extends Seeder
 
         User::create(['email' => 'student@email.com',
                       'password' => 'password',
-                      'firstname' => 'Admin',
+                      'firstname' => 'Student',
                       'middlename' => '',
-                      'lastname' => 'Admin',
+                      'lastname' => 'Student',
                       'role' => 'student']);
 
         User::create(['email' => 'teacher@email.com',
                       'password' => 'password',
-                      'firstname' => 'Admin',
+                      'firstname' => 'Teacher',
                       'middlename' => '',
-                      'lastname' => 'Admin',
+                      'lastname' => 'Teacher',
                       'role' => 'teacher']);
 
     }
