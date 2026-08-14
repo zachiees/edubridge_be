@@ -171,6 +171,9 @@ class Evaluations extends Controller
 
         return ['items'=>$items,'count'=>$count];
     }
+    public function find(Request $request,$uuid){
+        return TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
+    }
     public function destroy(string $uuid){
         return TeacherEvaluation::where('uuid', $uuid)->firstOrFail()->delete();
     }

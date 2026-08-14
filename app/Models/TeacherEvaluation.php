@@ -28,4 +28,5 @@ class TeacherEvaluation extends Model
         return $this->hasMany(TeacherEvaluationRespondents::class, 'evaluation_id', 'id');
     }
 
+
 }
