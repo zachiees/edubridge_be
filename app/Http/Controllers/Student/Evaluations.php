@@ -37,4 +37,13 @@ class Evaluations extends Controller
                                             ->where('student_id',$user->id)
                                             ->firstOrFail();
     }
+    public function submit(Request $request,$uuid){
+        $request->validate([]);
+        $user = $request->user();
+        $record = TeacherEvaluationRespondents::with(['evaluation.questions'])
+                                                ->where('uuid',$uuid)
+                                                ->where('student_id',$user->id)
+                                                ->firstOrFail();
+
+    }
 }

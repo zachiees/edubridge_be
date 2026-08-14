@@ -7,4 +7,5 @@ Route::prefix('student/evaluations')
     ->group(function () {
         Route::get('', [Evaluations::class, 'index']);
         Route::get('{uuid}', [Evaluations::class, 'find']);
+        Route::post('{uuid}', [Evaluations::class, 'submit']);
     });
