@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Controllers\Common\Students;
+use App\Models\TeacherEvaluation;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,6 +42,9 @@ class TeacherEvaluationRespondents extends Model
     }
     public function course(){
         return $this->belongsTo(Course::class, 'course_id', 'id');
+    }
+    public function evaluation(){
+        return $this->belongsTo(TeacherEvaluation::class, 'evaluation_id', 'id');
     }
 
 }

@@ -9,7 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 class TeacherEvaluationQuestion extends Model
 {   use HasUuids;
     //
-    protected $hidden = ['id'];
+    protected $hidden = [
+        'id',
+        'evaluation_id'
+    ];
     protected $fillable = [
         'evaluation_id',
         'type',
