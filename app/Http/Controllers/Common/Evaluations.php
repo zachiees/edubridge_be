@@ -45,7 +45,11 @@ class Evaluations extends Controller
                                                'type'         =>'rating',
                                                'question'     =>$q ]);
         }
-
+        foreach ($feedback_questions as $q){
+            TeacherEvaluationQuestion::create(['evaluation_id'=>$eval->id,
+                                                'type'         =>'feedback',
+                                                'question'     =>$q ]);
+        }
         //POPULATE RESPONDENTS
         switch ($scope){
             case 'all':
