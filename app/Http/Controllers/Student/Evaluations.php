@@ -17,7 +17,7 @@ class Evaluations extends Controller
     //
     public function index(Request $request){
         $user = $request->user();
-        $query = TeacherEvaluationRespondents::where('student_id',$user->id);
+        $query = TeacherEvaluationRespondents::where('student_id',$user->id)->whereRelation('evaluation','visible',true);
 
         $page = $request->input('page', 1);
         $status = $request->input('status', '');
