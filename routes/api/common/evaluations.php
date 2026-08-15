@@ -11,5 +11,6 @@ Route::prefix('common/evaluations')
     Route::get('{uuid}', [Evaluations::class, 'find']);
     Route::delete('{uuid}', [Evaluations::class, 'destroy']);
     Route::patch('{uuid}/set_visibility', [Evaluations::class, 'set_visibility']);
+    Route::get('{uuid}/student_progress', [Evaluations::class, 'student_progress']);
 
     });
