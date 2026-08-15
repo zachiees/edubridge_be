@@ -189,4 +189,8 @@ class Evaluations extends Controller
                         ->whereRelation('student_evaluations','evaluation_id',$eval->id)
                         ->get();
     }
+    public function respondents(Request $request, string $uuid){
+        return TeacherEvaluation::where('uuid',$uuid)->firstOrFail()->respondents;
+    }
+
 }
