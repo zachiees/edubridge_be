@@ -46,5 +46,8 @@ class TeacherEvaluationRespondents extends Model
     public function evaluation(){
         return $this->belongsTo(TeacherEvaluation::class, 'evaluation_id', 'id');
     }
+    public function responses(){
+        return $this->hasMany(TeacherEvaluationResponse::class, 'respondent_id', 'id');
+    }
 
 }

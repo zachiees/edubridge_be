@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TeacherEvaluationRespondents;
 
 class TeacherEvaluationResponse extends Model
 {   use HasUuids;
@@ -25,6 +26,10 @@ class TeacherEvaluationResponse extends Model
 
     public function uniqueIds(){
         return ['uuid'];
+    }
+
+    public function respondent(){
+        return $this->belongsTo(TeacherEvaluationRespondents::class, 'respondent_id');
     }
 
 

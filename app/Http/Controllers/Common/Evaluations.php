@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\TeacherEvaluation;
 use App\Models\TeacherEvaluationQuestion;
 use App\Models\TeacherEvaluationRespondents;
+use App\Models\TeacherEvaluationResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -191,6 +192,47 @@ class Evaluations extends Controller
     }
     public function respondents(Request $request, string $uuid){
         return TeacherEvaluation::where('uuid',$uuid)->firstOrFail()->respondents;
+    }
+    public function teacher_summary(Request $request, string $uuid){
+        $evaluation  = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
+        $questions = $evaluation->questions()
+                                ->select(['id','uuid','question','type'])
+                                ->where('type','rating')
+                                ->get();
+        $teacher_course_pairs = DB::table((new TeacherEvaluationRespondents())->getTable())
+                                    ->select(['course_id','teacher_id'])
+                                    ->where('evaluation_id',$evaluation->id)
+                                    ->orderBy('teacher_id','asc')
+                                    ->get();
+        $results = [];
+        foreach ($teacher_course_pairs as $pair){
+            $course = Course::select(['id','uuid','name','code'])->find($pair->course_id);
+            $teacher = User::select(['id','uuid','firstname','lastname','email'])->find($pair->teacher_id);
+            $questions_results = [];
+            $questions_avg_total = 0;
+            foreach ($questions as $question){
+                $question_avg = TeacherEvaluationResponse::where('evaluation_id',$evaluation->id)
+                                                            ->where('question_id',$question->id)
+                                                            ->whereRelation('respondent',function($query) use ($course,$teacher){
+                                                                                    $query->where('course_id',$course->id)
+                                                                                          ->where('teacher_id',$teacher->id);})
+                                                            ->whereRelation('respondent','teacher_id',$teacher->id)
+                                                            ->get()
+                                                            ->avg('rating');
+                $questions_avg_total+=$question_avg;
+                $questions_results[] = ['question' => $question,
+                                        'avg' => $question_avg];
+            }
+
+            $total_avg = $questions_avg_total/count($questions_results);
+
+            $results[] = ['teacher' => $teacher,
+                          'course' => $course,
+                          'questions_results' => $questions_results,
+                          'total_avg' => $total_avg];
+
+        }
+        return $results;
     }
 
 }

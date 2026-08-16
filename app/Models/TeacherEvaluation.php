@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Course;
 
 class TeacherEvaluation extends Model
 {   use HasUuids;
@@ -27,6 +28,4 @@ class TeacherEvaluation extends Model
     public function respondents(){
         return $this->hasMany(TeacherEvaluationRespondents::class, 'evaluation_id', 'id');
     }
-
-
 }
