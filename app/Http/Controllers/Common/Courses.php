@@ -33,7 +33,7 @@ class Courses extends Controller
         return $course;
     }
     public function index(Request $request){
-        $query = Course::withCount(['students']);
+        $query = Course::with(['teacher'])->withCount(['students']);
         $page = $request->input('page', 1);
         $search = $request->input('query', '');
         $sort = $request->input('sort', '');

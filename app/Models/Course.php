@@ -22,9 +22,7 @@ class Course extends Model
         'lms_id',
     ];
 
-    protected $with = [
-        'teacher'
-    ];
+    protected $with = [];
 
     public function uniqueIds(){
         return ['uuid'];
