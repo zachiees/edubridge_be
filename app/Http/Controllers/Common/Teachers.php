@@ -21,16 +21,15 @@ class Teachers extends Controller
             'email'       => ['required', 'email', 'max:100','unique:users,email'],
         ]);
         DB::beginTransaction();
-        $password = uniqid('', true);
         $user = User::create([...$request->only(['firstname',
                                                  'middlename',
                                                  'lastname',
                                                  'suffix',
                                                  'mobile',
+                                                 'password',
                                                  'address',
                                                  'email']),
-                                'role'=>'teacher',
-                                'password' => $password]);
+                                'role'=>'teacher']);
         DB::commit();
         return $user;
 
