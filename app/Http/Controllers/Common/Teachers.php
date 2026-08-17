@@ -41,6 +41,16 @@ class Teachers extends Controller
         $page_size = 20;
 
 
+
+        if($search){
+            $query->where(function($query) use ($search){
+                $query->where('firstname', 'LIKE', "%$search%")
+                    ->orWhere('middlename', 'LIKE', "%$search%")
+                    ->orWhere('lastname', 'LIKE', "%$search%")
+                    ->orWhere('email', 'LIKE', "%$search%");
+            });
+        }
+
         $count = $query->count();
         //PAGINATE
         $query->offset(($page - 1) * $page_size)->limit($page_size);
