@@ -324,7 +324,7 @@ class Evaluations extends Controller
 
             $total_avg = $questions_avg_total/count($questions_results);
 
-            $results[] = ['name' => "$teacher->firstname $teacher->lastname",
+            $results[] = ['name' => "$teacher->lastname , $teacher->firstname",
                           'course_name' => $course->name,
                           'course_code' => $course->code,
                           ...$questions_results,
@@ -352,7 +352,7 @@ class Evaluations extends Controller
             $course = $rt->course;
             $question = $item->question;
 
-            $res = [ 'teacher' => "$teacher->firstname $teacher->lastname ",
+            $res = [ 'teacher' => "$teacher->lastname , $teacher->firstname",
                      'course_name' => $course->name,
                      'course_code' => $course->code];
             if($show_student){
