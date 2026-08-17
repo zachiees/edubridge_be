@@ -287,7 +287,7 @@ class Evaluations extends Controller
     public function export_summary(Request $request, string $uuid){
         $show = $request->input('show_students',false);
 
-        return ['summary'=>$this->export_summary_comments($uuid),
+        return ['summary' =>$this->export_summary_ratings($uuid),
                 'comments'=>$this->export_summary_comments($uuid,$show)];
     }
     public function export_summary_ratings(string $uuid){
