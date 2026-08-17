@@ -285,8 +285,10 @@ class Evaluations extends Controller
         return $results;
     }
     public function export_summary(Request $request, string $uuid){
+        $show = $request->input('show_students',false);
 
-        return $this->export_summary_ratings($uuid);
+        return ['summary'=>$this->export_summary_comments($uuid),
+                'comments'=>$this->export_summary_comments($uuid,$show)];
     }
     public function export_summary_ratings(string $uuid){
         $evaluation  = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
@@ -330,6 +332,39 @@ class Evaluations extends Controller
                           'over_all_avg' => $total_avg];
 
         }
+        return $results;
+    }
+    public function export_summary_comments(string $uuid,$show_student = false){
+        $evaluation  = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
+        $questions = $evaluation->questions()
+                                ->select(['id','uuid','question','type'])
+                                ->where('type','feedback')
+                                ->get();
+        $q_ids = $questions->pluck('id');
+        $responses = TeacherEvaluationResponse::with(['respondent','question'])
+                                                ->where('evaluation_id',$evaluation->id)
+                                                ->whereIn('question_id',$q_ids)
+                                                ->get();
+
+        $results = $responses->map(function($item) use ($show_student){
+
+            $rt = $item->respondent;
+            $teacher = $rt->teacher;
+            $course = $rt->course;
+            $question = $item->question;
+
+            $res = [ 'teacher' => "$teacher->firstname $teacher->lastname ",
+                     'course_name' => $course->name,
+                     'course_code' => $course->code];
+
+            if($show_student){
+                $student = $rt->student;
+                $res['student'] = "$student->firstname $student->lastname";
+            }
+            $res['question'] = $question->question;
+            $res['comment'] = $item->response;
+            return $res;
+        });
         return $results;
     }
 

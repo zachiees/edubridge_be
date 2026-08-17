@@ -31,6 +31,9 @@ class TeacherEvaluationResponse extends Model
     public function respondent(){
         return $this->belongsTo(TeacherEvaluationRespondents::class, 'respondent_id');
     }
+    public function question(){
+        return $this->belongsTo(TeacherEvaluationQuestion::class, 'question_id');
+    }
 
 
 }
