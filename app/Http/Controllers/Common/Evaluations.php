@@ -203,7 +203,10 @@ class Evaluations extends Controller
                                     ->select(['course_id','teacher_id'])
                                     ->where('evaluation_id',$evaluation->id)
                                     ->orderBy('teacher_id','asc')
+                                    ->distinct()
                                     ->get();
+
+
         $results = [];
         foreach ($teacher_course_pairs as $pair){
             $course = Course::select(['id','uuid','name','code'])->find($pair->course_id);
