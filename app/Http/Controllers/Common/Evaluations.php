@@ -285,8 +285,7 @@ class Evaluations extends Controller
         return $results;
     }
     public function export_summary(Request $request, string $uuid){
-        $show = $request->input('show_students',false);
-
+        $show = filter_var($request->input('show_students',false), FILTER_VALIDATE_BOOLEAN);
         return ['summary' =>$this->export_summary_ratings($uuid),
                 'comments'=>$this->export_summary_comments($uuid,$show)];
     }
@@ -356,7 +355,6 @@ class Evaluations extends Controller
             $res = [ 'teacher' => "$teacher->firstname $teacher->lastname ",
                      'course_name' => $course->name,
                      'course_code' => $course->code];
-
             if($show_student){
                 $student = $rt->student;
                 $res['student'] = "$student->firstname $student->lastname";
