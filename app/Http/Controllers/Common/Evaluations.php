@@ -284,5 +284,53 @@ class Evaluations extends Controller
 
         return $results;
     }
+    public function export_summary(Request $request, string $uuid){
+
+        return $this->export_summary_ratings($uuid);
+    }
+    public function export_summary_ratings(string $uuid){
+        $evaluation  = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
+        $questions = $evaluation->questions()
+                                ->select(['id','uuid','question','type'])
+                                ->where('type','rating')
+                                ->get();
+        $teacher_course_pairs = DB::table((new TeacherEvaluationRespondents())->getTable())
+                                    ->select(['course_id','teacher_id'])
+                                    ->where('evaluation_id',$evaluation->id)
+                                    ->orderBy('teacher_id','asc')
+                                    ->distinct()
+                                    ->get();
+
+        $results = [];
+        foreach ($teacher_course_pairs as $pair){
+            $course = Course::select(['id','uuid','name','code'])->find($pair->course_id);
+            $teacher = User::select(['id','uuid','firstname','lastname','email'])->find($pair->teacher_id);
+            $questions_results = [];
+            $questions_avg_total = 0;
+            $q_index = 0;
+            foreach ($questions as $question){
+                $q_index++;
+                $question_avg = TeacherEvaluationResponse::where('evaluation_id',$evaluation->id)
+                                                            ->where('question_id',$question->id)
+                                                            ->whereRelation('respondent',function($query) use ($course,$teacher){
+                                                                    $query->where('course_id',$course->id)
+                                                                           ->where('teacher_id',$teacher->id);})
+                                                            ->get()
+                                                            ->avg('rating');
+                $questions_avg_total+=$question_avg;
+                $questions_results["Q$q_index"] = $question_avg;
+            }
+
+            $total_avg = $questions_avg_total/count($questions_results);
+
+            $results[] = ['name' => "$teacher->firstname $teacher->lastname",
+                          'course_name' => $course->name,
+                          'course_code' => $course->code,
+                          ...$questions_results,
+                          'over_all_avg' => $total_avg];
+
+        }
+        return $results;
+    }
 
 }
