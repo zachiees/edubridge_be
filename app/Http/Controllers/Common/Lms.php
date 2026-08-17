@@ -13,7 +13,8 @@ class Lms extends Controller
     }
     public function courses(Request $request){
         $course_id = $request->input('category_id',null);
-        return $this->moodle->courses($course_id);
+        $res = $this->moodle->courses($course_id);
+        return array_filter($res,function($item){ return $item['visible'] == 1; });
     }
     public function course_find(Request $request,$id){
         return $this->moodle->findCourseById($id);
