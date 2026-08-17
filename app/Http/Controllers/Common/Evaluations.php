@@ -264,7 +264,8 @@ class Evaluations extends Controller
                             ->get()
                             ->pluck('course_id');
 
-            $teacher_courses = Course::select(['id','name','code'])->whereIn('id',$course_ids)->get();
+            $teacher_courses = Course::select(['id','uuid','name','code'])->whereIn('id',$course_ids)->get();
+            $response_count = TeacherEvaluationRespondents::where('teacher_id',$t->teacher_id)->count();
             $questions_avg_total = 0;
             foreach ($rating_questions as $question){
                 $question_avg = TeacherEvaluationResponse::where('evaluation_id',$evaluation->id)
@@ -277,6 +278,7 @@ class Evaluations extends Controller
             $teacher_avg = $questions_avg_total/count($rating_questions);
             $results[] = ['teacher' => $teacher,
                           'courses' => $teacher_courses,
+                          'response_count' => $response_count,
                           'total_avg' => $teacher_avg];
         }
 
