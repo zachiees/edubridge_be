@@ -14,4 +14,5 @@ Route::prefix('common/evaluations')
     Route::patch('{uuid}/set_visibility', [Evaluations::class, 'set_visibility']);
     Route::get('{uuid}/student_progress', [Evaluations::class, 'student_progress']);
     Route::get('{uuid}/summary', [Evaluations::class, 'summary']);
+    Route::get('{uuid}/teacher_summary', [Evaluations::class, 'teacher_summary']);
 });
