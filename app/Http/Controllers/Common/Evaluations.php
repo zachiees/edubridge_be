@@ -193,7 +193,7 @@ class Evaluations extends Controller
     public function respondents(Request $request, string $uuid){
         return TeacherEvaluation::where('uuid',$uuid)->firstOrFail()->respondents;
     }
-    public function teacher_summary(Request $request, string $uuid){
+    public function summary(Request $request, string $uuid){
         $evaluation  = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
         $questions = $evaluation->questions()
                                 ->select(['id','uuid','question','type'])
