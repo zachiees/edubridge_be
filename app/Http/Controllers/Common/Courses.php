@@ -67,7 +67,10 @@ class Courses extends Controller
         return ['items'=>$items,'count'=>$count];
     }
     public function find(Request $request, $uuid){
-        return Course::with(['students.student_details','teacher'])->where('uuid',$uuid)->firstOrFail();
+        return Course::with(['students.student_details','teacher'])
+                        ->where('uuid',$uuid)
+                        ->orderBy('students.firstname','asc')
+                        ->firstOrFail();
     }
     public function update(Request $request, string $uuid){
         $course = Course::where('uuid', $uuid)->firstOrFail();
