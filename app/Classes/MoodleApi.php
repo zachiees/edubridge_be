@@ -70,7 +70,8 @@ class MoodleApi
         return $this->sendPost('core_role_assign_roles ', $params );
     }
     public function courseCategories(){
-        return $this->sendPost('core_course_get_categories');
+        $params = ['criteria'=>[['key'=>'visible','value'=>1]]];
+        return $this->sendPost('core_course_get_categories',$params);
     }
     public function courses($category_id=null){
         $params = ["field"=>'category','value'=>$category_id];
