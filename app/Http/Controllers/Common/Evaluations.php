@@ -69,6 +69,22 @@ class Evaluations extends Controller
         return $eval;
 
     }
+    public function add_scope_item(Request $request,$uuid){
+        $request->input(['items' =>'array']);
+        $items = $request->input('items');
+
+        $record = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
+        $scope = $record->scope;
+        DB::beginTransaction();
+        if($scope=='course' || $scope == 'all'){
+            $this->eval_course($record,$items);
+        }
+        if($scope == 'teacher'){
+            $this->eval_teacher($record,$items);
+        }
+        DB::commit();
+        return [];
+    }
     private function eval_all(TeacherEvaluation $eval){
         //GET ALL COURSES
         $courses = Course::whereNotNull('teacher_id')->get();
@@ -96,8 +112,6 @@ class Evaluations extends Controller
 
     }
     private function eval_course(TeacherEvaluation $eval,$course_list){
-        Log::info('here');
-        Log::info($course_list);
         foreach ($course_list as $uuid){
             //FIND COURSE
             $course = Course::where('uuid',$uuid)->first();
@@ -145,6 +159,9 @@ class Evaluations extends Controller
             }
         }
     }
+
+
+
     //
     public function index(Request $request){
         $query = TeacherEvaluation::withCount(['respondents','questions']);
