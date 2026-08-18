@@ -29,19 +29,15 @@ class Evaluations extends Controller
             'feedback_questions'=>'array',
         ]);
         //PREPARATIONS
-
-        $scope           = $request->input('scope');
-        $scope_items     = $request->input('scope_items',[]);
         $questions       = $request->input('questions',[]);
         $feedback_questions = $request->input('feedback_questions',[]);
-
 
         DB::beginTransaction();
         //STORE META DATA
         $eval = TeacherEvaluation::create([
             ...$request->except(['scope_items','questions','feedback_questions']),
         ]);
-
+        //POPULATE QUESTIONS
         foreach ($questions as $q){
             TeacherEvaluationQuestion::create(['evaluation_id'=>$eval->id,
                                                'type'         =>'rating',
@@ -51,19 +47,6 @@ class Evaluations extends Controller
             TeacherEvaluationQuestion::create(['evaluation_id'=>$eval->id,
                                                 'type'         =>'feedback',
                                                 'question'     =>$q ]);
-        }
-        //POPULATE RESPONDENTS
-        switch ($scope){
-            case 'all':
-                $this->eval_all($eval);
-                break;
-            case 'course':
-                $this->eval_course($eval,$scope_items);
-                break;
-            case 'teacher':
-                $this->eval_teacher($eval,$scope_items);
-                break;
-            default: abort(Response::HTTP_BAD_REQUEST);
         }
         DB::commit();
         return $eval;
