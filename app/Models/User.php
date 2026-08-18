@@ -64,7 +64,7 @@ class User extends Authenticatable
     public function uniqueIds(){
         return ['uuid'];
     }
-    //RELATIONS
+    //STUDENT RELATIONS
     public function student_details(){
         return $this->hasOne(StudentDetails::class,'user_id','id');
     }
@@ -73,5 +73,9 @@ class User extends Authenticatable
     }
     public function student_evaluations(){
         return $this->hasMany(TeacherEvaluationRespondents::class, 'student_id');
+    }
+    //TEACHER RELATIONS
+    public function teacher_courses(){
+        return $this->hasMany(Course::class,'teacher_id');
     }
 }
