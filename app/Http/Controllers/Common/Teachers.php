@@ -35,7 +35,7 @@ class Teachers extends Controller
 
     }
     public function index(Request $request){
-        $query = User::with([])->where('role', 'teacher');
+        $query = User::withCount(['teacher_courses'])->where('role', 'teacher');
         $page = $request->input('page', 1);
         $search = $request->input('query', '');
         $page_size = 20;
