@@ -27,7 +27,7 @@ class TeacherEvaluationRespondents extends Model
         'status',
     ];
 
-    protected $with = ['student','teacher','course'];
+    protected $with = [];
 
     public function uniqueIds(){
         return ['uuid'];
