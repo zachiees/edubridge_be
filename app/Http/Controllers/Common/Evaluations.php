@@ -186,8 +186,9 @@ class Evaluations extends Controller
     public function student_progress(Request $request, string $uuid){
         $eval = TeacherEvaluation::where('uuid', $uuid)->firstOrFail();
 
-        return User::with(['student_evaluations','student_details'])
-                        ->whereRelation('student_evaluations','evaluation_id',$eval->id)
+        return User::with(['student_details',
+                           'student_evaluations'=> fn($q)=> $q->where('evaluation_id',$eval->id) ])
+                        ->whereRelation('student_evaluations', fn($q)=> $q->where('evaluation_id',$eval->id))
                         ->get();
     }
     public function respondents(Request $request, string $uuid){
