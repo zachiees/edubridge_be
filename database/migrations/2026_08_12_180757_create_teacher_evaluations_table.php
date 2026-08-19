@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('reminders')->nullable();
             $table->text('instructions')->nullable();
             $table->boolean('visible')->default(false);
+            $table->date('date_start')->nullable();
+            $table->date('date_end')->nullable();
             $table->timestamps();
         });
     }

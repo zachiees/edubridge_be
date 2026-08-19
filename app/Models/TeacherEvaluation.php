@@ -16,6 +16,8 @@ class TeacherEvaluation extends Model
         'visible',
         'reminders',
         'instructions',
+        'date_start',
+        'date_end',
     ];
 
     public function uniqueIds(){
