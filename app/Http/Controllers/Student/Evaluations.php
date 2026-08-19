@@ -39,7 +39,9 @@ class Evaluations extends Controller
     }
     public function find(Request $request, $uuid){
         $user = $request->user();
-        return TeacherEvaluationRespondents::with(['evaluation.questions'])
+        return TeacherEvaluationRespondents::with(['evaluation.questions',
+                                                   'teacher',
+                                                   'course'])
                                             ->where('uuid',$uuid)
                                             ->where('student_id',$user->id)
                                             ->firstOrFail();
