@@ -49,6 +49,7 @@ class Evaluations extends Controller
                                             ->firstOrFail();
     }
     public function submit(Request $request,$uuid){
+
         $user = $request->user();
         $respondent = TeacherEvaluationRespondents::with(['evaluation.questions'])
                                                 ->where('uuid',$uuid)
@@ -60,9 +61,16 @@ class Evaluations extends Controller
         }
 
         $eval    = $respondent->evaluation;
-        $teacher = $respondent->teacher;
-        $course  = $respondent->course;
-        $student = $respondent->student;
+
+        //CHECK DATE
+
+        $now = Carbon::now();
+        $start_date = Carbon::parse($eval->date_start);
+        $end_date   = Carbon::parse($eval->date_end);
+
+        if($now->isBefore($start_date) || $now->isAfter($end_date) ){
+            return response(['message'=>'Invalid Date'],Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         $responses = $request->all();
         DB::beginTransaction();
