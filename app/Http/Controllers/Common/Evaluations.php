@@ -23,10 +23,11 @@ class Evaluations extends Controller
             'title'       => 'required',
             'reminders'   => 'nullable',
             'instructions'=> 'nullable',
-            'scope' =>'required|in:all,grade_level,course,teacher',
-            'scope_items' =>'array',
+            'scope'       =>'required|in:all,grade_level,course,teacher',
             'questions'         =>'array',
             'feedback_questions'=>'array',
+            'date_start'        =>'required|date',
+            'date_end'          =>'required|date',
         ]);
         //PREPARATIONS
         $questions       = $request->input('questions',[]);
@@ -35,7 +36,7 @@ class Evaluations extends Controller
         DB::beginTransaction();
         //STORE META DATA
         $eval = TeacherEvaluation::create([
-            ...$request->except(['scope_items','questions','feedback_questions']),
+            ...$request->except(['questions','feedback_questions']),
         ]);
         //POPULATE QUESTIONS
         foreach ($questions as $q){
