@@ -9,7 +9,7 @@ class Courses extends Controller
 {
     //
     public function index(Request $request){
-        $query = $request->user()->student_courses();
+        $query = $request->user()->student_courses()->with(['teacher:id,firstname,lastname']);
         $page = $request->input('page', 1);
         $search = $request->input('query', '');
         $sort = $request->input('sort', '');
