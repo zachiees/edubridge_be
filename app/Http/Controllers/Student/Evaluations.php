@@ -7,6 +7,7 @@ use App\Models\TeacherEvaluation;
 use App\Models\TeacherEvaluationQuestion;
 use App\Models\TeacherEvaluationRespondents;
 use App\Models\TeacherEvaluationResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -16,8 +17,9 @@ class Evaluations extends Controller
 {
     //
     public function index(Request $request){
+        $this->updateMissed($request);
         $user = $request->user();
-        $query = TeacherEvaluationRespondents::with(['teacher','course'])
+        $query = TeacherEvaluationRespondents::with(['teacher','course','evaluation'])
                                                 ->where('student_id',$user->id)
                                                 ->whereRelation('evaluation','visible',true);
 
@@ -77,5 +79,16 @@ class Evaluations extends Controller
         $respondent->update(['status' => 'done']);
         DB::commit();
         return [];
+    }
+    //PRIVATE
+
+    private function updateMissed(Request $request){
+        $user = $request->user();
+        $now = Carbon::now()->format('Y-m-d');
+        TeacherEvaluationRespondents::where('student_id',$user->id)
+                                            ->where('status','pending')
+                                            ->with(['evaluation:id,date_end'])
+                                            ->whereRelation('evaluation','date_end','<=',$now)
+                                            ->update(['status'=>'missed']);
     }
 }
