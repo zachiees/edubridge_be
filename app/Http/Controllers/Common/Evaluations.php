@@ -289,7 +289,9 @@ class Evaluations extends Controller
     public function export_summary(Request $request, string $uuid){
         $show = filter_var($request->input('show_students',false), FILTER_VALIDATE_BOOLEAN);
         return ['summary' =>$this->export_summary_ratings($uuid),
-                'comments'=>$this->export_summary_comments($uuid,$show)];
+                'comments'=>$this->export_summary_comments($uuid,$show),
+                'breakdown' => $this->export_summary_breakdown($uuid),
+            ];
     }
     public function export_summary_ratings(string $uuid){
         $evaluation  = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
@@ -353,19 +355,48 @@ class Evaluations extends Controller
             $teacher = $rt->teacher;
             $course = $rt->course;
             $question = $item->question;
+            $student = $rt->student;
 
             $res = [ 'teacher' => "$teacher->lastname , $teacher->firstname",
                      'course_name' => $course->name,
                      'course_code' => $course->code];
-            if($show_student){
-                $student = $rt->student;
-                $res['student'] = "$student->firstname $student->lastname";
-            }
+
+            $res['student'] = $show_student ? "$student->firstname $student->lastname" : $rt->student->student_details?->lrn ?? '';
             $res['question'] = $question->question;
             $res['comment'] = $item->response;
             return $res;
         });
         return $results;
+    }
+    public function export_summary_breakdown(string $uuid){
+        $evaluation  = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
+//        TeacherEvaluationRespondents::where('evaluation_id',$evaluation->id)->get();
+        $res = TeacherEvaluationResponse::with(['respondent.teacher',
+                                                'respondent.student',
+                                                'respondent.course',
+                                                'question'])
+                                         ->where('evaluation_id',$evaluation->id)
+                                         ->whereRelation('question','type','rating')
+                                        ->get();
+        $result = [];
+        foreach ($res as $item){
+            $row = [];
+            $question = $item->question;
+            $respondent = $item->respondent;
+            $student = $respondent->student;
+            $teacher = $respondent->teacher;
+            $course  = $respondent->course;
+
+            $row['student'] = "$student->firstname $student->lastname";
+            $row['course_name']  = $course->name;
+            $row['course_code']  = $course->code;
+            $row['teacher']      = "$teacher->firstname $teacher->lastname";
+            $row['question']     = $question->question;
+            $row['rating']       = $item->rating;
+            $result[] = $row;
+        }
+
+        return $result;
     }
 
 }

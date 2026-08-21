@@ -34,6 +34,8 @@ class TeacherEvaluationResponse extends Model
     public function question(){
         return $this->belongsTo(TeacherEvaluationQuestion::class, 'question_id');
     }
-
+    public function evaluation(){
+        return $this->belongsTo(TeacherEvaluation::class, 'evaluation_id');
+    }
 
 }
