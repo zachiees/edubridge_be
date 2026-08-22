@@ -399,33 +399,42 @@ class Evaluations extends Controller
         return $result;
     }
     public function export_completion(Request $request,string $uuid){
-
         return [ 'students' => $this->export_completion_students($uuid),
                  'teachers' => $this->export_completion_teachers($uuid)];
     }
     public function export_completion_students(string $uuid){
         $eval = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
-        $question_count = $eval->questions->count();
-        $respondents = $eval->respondents()
-                            ->withCount(['responses'])
-                            ->with(['student'])
-                            ->get();
-        $results = [];
-        foreach ($respondents as $res){
 
-            $student = $res->student;
-            $student_details = $student->student_details; //nullable
-            $answers = $res->responses_count;
+        $student_ids = DB::table((new TeacherEvaluationRespondents())->getTable())
+                            ->select(['student_id'])
+                            ->where('evaluation_id',$eval->id)
+                            ->get();
+
+
+        $results = [];
+        foreach ($student_ids as $record){
+            $student = User::find($record->student_id);
+            $total_count = TeacherEvaluationRespondents::where('student_id',$record->student_id)
+                                                        ->where('evaluation_id',$eval->id)
+                                                        ->count();
+
+            $completed_count = TeacherEvaluationRespondents::where('student_id',$record->student_id)
+                                                            ->where('evaluation_id',$eval->id)
+                                                            ->where('status','done')
+                                                            ->count();
 
             $row = [];
+
             $row['student']   = "$student->firstname $student->lastname";
             $row['username']  = $student_details?->lrn ?? '--';
-            $row['completed'] = $answers;
-            $row['total']     = $question_count;
-            $row['status']    = $res->status;
+            $row['completed'] = $completed_count;
+            $row['total']     = $total_count;
+            $row['status']    = $total_count == $completed_count ? "complete" : "incomplete";
 
             $results[] = $row;
+
         }
+
         return $results;
     }
     public function export_completion_teachers(string $uuid){

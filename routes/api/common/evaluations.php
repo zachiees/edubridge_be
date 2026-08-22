@@ -17,5 +17,5 @@ Route::prefix('common/evaluations')
     Route::get('{uuid}/summary', [Evaluations::class, 'summary']);
     Route::get('{uuid}/teacher_summary', [Evaluations::class, 'teacher_summary']);
     Route::get('{uuid}/export_summary', [Evaluations::class, 'export_summary']);
-    Route::get('{uuid}/completion_report', [Evaluations::class, 'export_completion']);
+    Route::get('{uuid}/export_completion', [Evaluations::class, 'export_completion']);
 });
