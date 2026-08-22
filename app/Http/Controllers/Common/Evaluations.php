@@ -286,12 +286,12 @@ class Evaluations extends Controller
 
         return $results;
     }
+    //REPORTS
     public function export_summary(Request $request, string $uuid){
         $show = filter_var($request->input('show_students',false), FILTER_VALIDATE_BOOLEAN);
-        return ['summary' =>$this->export_summary_ratings($uuid),
-                'comments'=>$this->export_summary_comments($uuid,$show),
-                'breakdown' => $this->export_summary_breakdown($uuid),
-            ];
+        return ['summary'   => $this->export_summary_ratings($uuid),
+                'comments'  => $this->export_summary_comments($uuid,$show),
+                'responses' => $this->export_summary_breakdown($uuid)];
     }
     public function export_summary_ratings(string $uuid){
         $evaluation  = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
@@ -398,5 +398,73 @@ class Evaluations extends Controller
 
         return $result;
     }
+    public function export_completion(Request $request,string $uuid){
+
+        return [ 'students' => $this->export_completion_students($uuid),
+                 'teachers' => $this->export_completion_teachers($uuid)];
+    }
+    public function export_completion_students(string $uuid){
+        $eval = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
+        $question_count = $eval->questions->count();
+        $respondents = $eval->respondents()
+                            ->withCount(['responses'])
+                            ->with(['student'])
+                            ->get();
+        $results = [];
+        foreach ($respondents as $res){
+
+            $student = $res->student;
+            $student_details = $student->student_details; //nullable
+            $answers = $res->responses_count;
+
+            $row = [];
+            $row['student']   = "$student->firstname $student->lastname";
+            $row['username']  = $student_details?->lrn ?? '--';
+            $row['completed'] = $answers;
+            $row['total']     = $question_count;
+            $row['status']    = $res->status;
+
+            $results[] = $row;
+        }
+        return $results;
+    }
+    public function export_completion_teachers(string $uuid){
+        $eval = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
+        $teacher_course = DB::table((new TeacherEvaluationRespondents())->getTable())
+                                    ->select(['course_id','teacher_id'])
+                                    ->where('evaluation_id',$eval->id)
+                                    ->orderBy('teacher_id','asc')
+                                    ->distinct()
+                                    ->get();
+        $results = [];
+        foreach ($teacher_course as $pair){
+            $teacher_id = $pair->teacher_id;
+            $course_id  = $pair->course_id;
+
+            $course  = Course::withCount(['students'])->find($course_id);
+            $teacher = User::find($teacher_id);
+            $students_count = $course->students_count;
+
+
+            $done_count = TeacherEvaluationRespondents::where('teacher_id',$teacher_id)
+                                                        ->where('course_id',$course_id)
+                                                        ->where('status','done')
+                                                        ->count();
+
+            $row = [];
+            $row['teacher']        = "$teacher->firstname $teacher->lastname";
+            $row['course_name']    = $course->name;
+            $row['course_code']    = $course->code;
+            $row['no_of_students'] = $students_count;
+            $row['completed']      = $done_count;
+            $row['status']         = $done_count == $students_count ? "Complete" : "Incomplete";
+
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+
 
 }
