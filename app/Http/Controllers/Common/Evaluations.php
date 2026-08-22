@@ -370,7 +370,6 @@ class Evaluations extends Controller
     }
     public function export_summary_breakdown(string $uuid){
         $evaluation  = TeacherEvaluation::where('uuid',$uuid)->firstOrFail();
-//        TeacherEvaluationRespondents::where('evaluation_id',$evaluation->id)->get();
         $res = TeacherEvaluationResponse::with(['respondent.teacher',
                                                 'respondent.student',
                                                 'respondent.course',
