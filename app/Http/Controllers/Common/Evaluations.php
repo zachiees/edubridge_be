@@ -455,7 +455,8 @@ class Evaluations extends Controller
             $students_count = $course->students_count;
 
 
-            $done_count = TeacherEvaluationRespondents::where('teacher_id',$teacher_id)
+            $done_count = TeacherEvaluationRespondents::where('evaluation_id',$eval->id)
+                                                        ->where('teacher_id',$teacher_id)
                                                         ->where('course_id',$course_id)
                                                         ->where('status','done')
                                                         ->count();
